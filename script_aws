@@ -1,0 +1,29 @@
+# 1. Create EC2 Key Pair
+aws ec2 create-key-pair --key-name flin-key --query 'KeyMaterial' --output text > flin-key.pem
+chmod 400 flin-key.pem
+
+# 2. Launch EC2 Instance (Amazon Linux 2)
+aws ec2 run-instances \
+  --image-id ami-0abcdef1234567890 \ # Ganti dengan AMI Amazon Linux 2 di region Anda
+  --count 1 \
+  --instance-type t2.micro \
+  --key-name flin-key \
+  --security-groups flin-sg \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=flin-wordpress}]'
+
+# 3. Create RDS MySQL Instance
+aws rds create-db-instance \
+  --db-instance-identifier flin-db \
+  --db-instance-class db.t2.micro \
+  --engine mysql \
+  --master-username admin \
+  --master-user-password Password123! \
+  --allocated-storage 20
+
+# 4. Create S3 Bucket
+aws s3 mb s3://flin-wordpress-uploads
+
+# 5. Set public read policy (optional, or use CloudFront)
+aws s3api put-bucket-policy --bucket flin-wordpress-uploads --policy file://s3-policy.json
+
+# 6. Create CloudFront Distribution (optional via console or CLI)
