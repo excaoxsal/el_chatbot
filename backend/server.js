@@ -9,15 +9,15 @@ app.use(cors({
 
 app.use(express.json());
 
-// Load predefined responses
-const responses = JSON.parse(fs.readFileSync('backend/response.json')).responses;
+
+const elresponse = JSON.parse(fs.readFileSync('backend/response.json')).elresponse;
 
 app.post('/chat', (req, res) => {
   const question = req.body.question.toLowerCase();
   let answer = "Sorry, I don't understand that question.";
 
-  // Cari jawaban yang cocok
-  for (const [key, value] of Object.entries(responses)) {
+  
+  for (const [key, value] of Object.entries(elresponse)) {
     if (question.includes(key)) {
       answer = value;
       break;
