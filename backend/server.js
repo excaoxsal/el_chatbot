@@ -4,7 +4,7 @@ const app = express();
 const PORT = 3000;
 const cors = require('cors'); //
 app.use(cors({
-  origin: ['http://localhost', 'http://127.0.0.1'] // Izinkan dari origin ini
+  origin: ['http://localhost', 'http://127.0.0.1']
 }));
 
 app.use(express.json());
